@@ -1,9 +1,19 @@
+"use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import api, { setAuthToken } from "../utils/api";
 
+interface User {
+    firstName: string,
+    lastName: string,
+    gender: string,
+    phoneNumber: string,
+    email: string,
+    password: string,
+    role: string
+}
 interface AuthContextProps {
-    user: any;
+    user: User;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
     register: (
@@ -21,7 +31,7 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<any | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
 
     const login = async (email: string, password: string) => {
@@ -58,15 +68,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     return (
 
-        <AuthContext.Provider value= {{ user, login, logout, register, isAuthenticated }
-}>
-    { children }
-    </AuthContext.Provider>
+        <AuthContext.Provider value={{ user, login, logout, register, isAuthenticated }
+        }>
+            {children}
+        </AuthContext.Provider>
     );
 };
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
+    console.log(context);
     if (!context) {
         throw new Error("useAuth must be used within an AuthProvider");
     }
