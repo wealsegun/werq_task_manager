@@ -62,7 +62,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (token) {
             setAuthToken(token);
             api.get("/accounts/me")
-                .then((response) => setUser(response.data))
+                .then((response) => {
+                    console.log(response)
+                    setUser(response.data)
+                })
                 .catch(() => logout());
         }
     }, []);
