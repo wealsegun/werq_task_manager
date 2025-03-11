@@ -1,14 +1,17 @@
+"use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter, useParams } from 'next/navigation'
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/utils/api";
-// import api from "../../utils/api";
-// import { useAuth } from "../../contexts/AuthContext";
+import { toast } from 'react-toastify';
 
 const EditTask = () => {
     const { isAuthenticated } = useAuth();
     const router = useRouter();
-    const { id } = router.query;
+    const searchParams = useParams()
+    const { id } = searchParams;
+
+    console.log(id)
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -16,10 +19,12 @@ const EditTask = () => {
 
     useEffect(() => {
         if (id) {
+            console.log(id);
             api.get(`/tasks/${id}`).then(({ data }) => {
-                setTitle(data.title);
-                setDescription(data.description);
-                setStatus(data.status);
+                console.log(data.data);
+                setTitle(data.data.task.title);
+                setDescription(data.data.task.description);
+                setStatus(data.data.task.status);
             });
         }
     }, [id]);
@@ -28,9 +33,12 @@ const EditTask = () => {
         e.preventDefault();
         try {
             await api.patch(`/tasks/${id}`, { title, description, status });
-            router.push("/tasks");
+            toast.success("Task updated successfully!");
+            router.push("/");
+
         } catch (err) {
             console.log(err);
+            toast.error("Failed to update task. Please try again.");
             alert("Failed to update task. Please try again.");
         }
     };
@@ -62,6 +70,7 @@ const EditTask = () => {
                         onChange={(e) => setStatus(e.target.value)}
                         className="w-full mb-3 p-2 border rounded"
                     >
+                        <option value="in-progress">In Progress</option>
                         <option value="pending">Pending</option>
                         <option value="completed">Completed</option>
                     </select>

@@ -1,7 +1,9 @@
+"use client";
 import React, { useState } from "react";
-import api from "../../utils/api";
+import api from "../../../utils/api";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
+import { toast } from 'react-toastify';
 
 const AddTask = () => {
     const { isAuthenticated } = useAuth();
@@ -13,11 +15,12 @@ const AddTask = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await api.post("/tasks", { title, description });
-            router.push("/tasks");
+            await api.post("/tasks", { title, description, status });
+            toast.success("Task created successfully!");
+            router.push("/");
         } catch (err) {
             console.error(err);
-            alert("Failed to create task. Please try again.");
+            toast.error("Failed to create task. Please try again.");
         }
     };
 
@@ -53,6 +56,7 @@ const AddTask = () => {
                             <option value="pending">Pending</option>
                             <option value="completed">Completed</option>
                         </select>
+                        <p>Selected Status: {status}</p> {/* Display the selected status for verification */}
                     </div>
                     <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded">
                         Add Task
