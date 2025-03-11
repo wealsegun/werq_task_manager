@@ -25,7 +25,8 @@ const Tasks = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       const { data } = await api.get(`/tasks?status=${filter}&search=${search}`);
-      setTasks(data);
+      console.log(data.data);
+      setTasks(data.data);
     };
     fetchTasks();
   }, [filter, search, page]);
@@ -45,7 +46,7 @@ const Tasks = () => {
 
   const openModal = async (id: string) => {
     const { data } = await api.get(`/tasks/${id}/history`);
-    setTaskHistory(data);
+    setTaskHistory(data.data);
     setModalOpen(true);
   };
 
@@ -77,27 +78,28 @@ const Tasks = () => {
         </select>
       </div>
       <ul>
-        {tasks.map((task) => (
-          <li key={task.id} className="mb-2 p-2 border rounded">
-            <h2 className="font-bold">{task.title}</h2>
-            <p>{task.description}</p>
-            <p>Status: {task.status}</p>
-            <button onClick={() => openModal(task.id)} className="text-blue-500 hover:underline">
-              View History
-            </button>
-            <TaskHistoryModal
-              isOpen={isModalOpen}
-              onClose={() => setModalOpen(false)}
-              history={taskHistory}
-            />
-            <button
-              onClick={() => handleDelete(task.id)}
-              className="text-red-500 hover:underline"
-            >
-              Delete
-            </button>
-          </li>
-        ))}
+        {tasks.length > 0 ?
+          tasks.map((task) => (
+            <li key={task.id} className="mb-2 p-2 border rounded">
+              <h2 className="font-bold">{task.title}</h2>
+              <p>{task.description}</p>
+              <p>Status: {task.status}</p>
+              <button onClick={() => openModal(task.id)} className="text-blue-500 hover:underline">
+                View History
+              </button>
+              <TaskHistoryModal
+                isOpen={isModalOpen}
+                onClose={() => setModalOpen(false)}
+                history={taskHistory}
+              />
+              <button
+                onClick={() => handleDelete(task.id)}
+                className="text-red-500 hover:underline"
+              >
+                Delete
+              </button>
+            </li>
+          )) : <p>No tasks available.</p>}
       </ul>
       <div className="flex mt-4">
         <button onClick={() => setPage(page - 1)} disabled={page === 1} className="p-2 mr-2">

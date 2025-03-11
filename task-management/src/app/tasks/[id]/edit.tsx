@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import api from "../../utils/api";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
+import api from "@/utils/api";
+// import api from "../../utils/api";
+// import { useAuth } from "../../contexts/AuthContext";
 
 const EditTask = () => {
     const { isAuthenticated } = useAuth();

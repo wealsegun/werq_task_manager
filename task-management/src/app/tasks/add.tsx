@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import api from "../utils/api";
+import api from "../../utils/api";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 const AddTask = () => {
     const { isAuthenticated } = useAuth();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [status, setStatus] = useState("");
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -42,6 +43,17 @@ const AddTask = () => {
                         onChange={(e) => setDescription(e.target.value)}
                         className="w-full mb-3 p-2 border rounded"
                     />
+                    <div className="mb-4">
+                        <select
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                            className="p-2 border rounded"
+                        >
+                            <option value="in-progress">In Progress</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
                     <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded">
                         Add Task
                     </button>

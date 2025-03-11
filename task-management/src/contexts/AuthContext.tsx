@@ -36,10 +36,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const login = async (email: string, password: string) => {
         const { data } = await api.post("/accounts/login", { email, password });
-        setUser(data.user);
-        setAuthToken(data.token);
-        localStorage.setItem("token", data.token);
-        router.push("/tasks");
+
+        console.log(data.data);
+        setUser(data.data.user);
+        setAuthToken(data.data.accessToken);
+        localStorage.setItem("token", data.data.accessToken);
+
+        router.push("/");
     };
 
     const register = async (firstName: string, lastName: string, gender: string, phoneNumber: string, email: string, password: string, role: string) => {
